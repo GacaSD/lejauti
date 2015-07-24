@@ -138,7 +138,7 @@ public class Fragment_CommentsList extends LoadingFragment implements OnItemClic
 		intent.putExtra("grad", k.getGrad());
 		intent.putExtra("city", city);
 		intent.putExtra("maps", k.getMaps());
-		intent.putExtra("slika", k.getSlika());
+		intent.putExtra("image", k.getSlika());
 		startActivity(intent);
 	}
 
@@ -204,6 +204,7 @@ public class Fragment_CommentsList extends LoadingFragment implements OnItemClic
 
 			Komentar k = mList.get(position);
 			if (!k.getSlika().equals("null")) {
+				JSONParser.saveToFile(mContext, k.getSlika());
 				mImage.setImageBitmap(JSONParser.decodeImage(k.getSlika()));
 			} else {
 				mImage.setImageResource(R.drawable.download);

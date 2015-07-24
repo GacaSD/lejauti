@@ -66,7 +66,8 @@ public class MultiPhotoSelectActivity extends AppActivity {
 			@Override
 			protected ArrayList<String> doInBackground(Void... params) {
 				final String[] columns = { MediaStore.Images.Media.DATA };
-				Cursor imagecursor = managedQuery(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, columns, null, null, MediaStore.Images.Media.DATE_TAKEN + " DESC");
+				Cursor imagecursor = managedQuery(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, columns, null, null,
+						MediaStore.Images.Media.DATE_TAKEN + " DESC");
 				ArrayList<String> imageUrls = new ArrayList<String>();
 				for (int i = 0; i < imagecursor.getCount(); i++) {
 					imagecursor.moveToPosition(i);
@@ -95,6 +96,7 @@ public class MultiPhotoSelectActivity extends AppActivity {
 	public void btnChoosePhotosClick(View v) {
 		Intent intent = new Intent(this, AddComment.class);
 		intent.putExtra("selectedPhotos", mSelectedImages);
+		Log.d("", "onActivityResult: " + mSelectedImages.size());
 		setResult(Activity.RESULT_OK, intent);
 		finish();
 	}
@@ -110,12 +112,11 @@ public class MultiPhotoSelectActivity extends AppActivity {
 			mInflater = LayoutInflater.from(mContext);
 			mList = new ArrayList<String>();
 			this.mList = imageList;
-
 		}
 
 		@Override
 		public int getCount() {
-			return imageUrls.size();
+			return mList.size();
 		}
 
 		@Override
@@ -139,18 +140,16 @@ public class MultiPhotoSelectActivity extends AppActivity {
 			ImageView mImage = (ImageView) convertView.findViewById(R.id.imageView1);
 
 			// your image file path
-			String url = imageUrls.get(position);
+			final String url = mList.get(position);
 			File file = new File(url);
 			int dimen = (int) (getScreenWidth(MultiPhotoSelectActivity.this) * 0.33);
 			mImage.setTag(url);
 			mImage.setLayoutParams(new RelativeLayout.LayoutParams(dimen, dimen));
 			mImage.setImageResource(R.drawable.ic_launcher);
-			loadImage(mImage);
 			mImage.setOnClickListener(new OnClickListener() {
 
 				@Override
 				public void onClick(View image) {
-					String url = image.getTag().toString();
 					if (mCheckBox.isChecked()) {
 						mSelectedImages.remove(url);
 					} else {
@@ -160,6 +159,7 @@ public class MultiPhotoSelectActivity extends AppActivity {
 				}
 			});
 			mCheckBox.setChecked(mSelectedImages.contains(url));
+			loadImage(mImage);
 			return convertView;
 		}
 
@@ -192,7 +192,9 @@ public class MultiPhotoSelectActivity extends AppActivity {
 	}
 
 	public static String getCachePath(Context context) {
-		return Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()) && context.getExternalCacheDir() != null ? context.getExternalCacheDir().getPath() : context.getCacheDir().getPath();
+		return Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())
+				&& context.getExternalCacheDir() != null ? context.getExternalCacheDir().getPath()
+						: context.getCacheDir().getPath();
 	}
 
 	/**
@@ -231,27 +233,28 @@ public class MultiPhotoSelectActivity extends AppActivity {
 		final Matrix matrix = new Matrix();
 		try {
 			final ExifInterface exif = new ExifInterface(file);
-			final int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+			final int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+					ExifInterface.ORIENTATION_NORMAL);
 			switch (orientation) {
-				case ExifInterface.ORIENTATION_ROTATE_90:
-					matrix.postRotate(90);
-					break;
+			case ExifInterface.ORIENTATION_ROTATE_90:
+				matrix.postRotate(90);
+				break;
 
-				case ExifInterface.ORIENTATION_ROTATE_180:
-					matrix.postRotate(180);
-					break;
+			case ExifInterface.ORIENTATION_ROTATE_180:
+				matrix.postRotate(180);
+				break;
 
-				case ExifInterface.ORIENTATION_ROTATE_270:
-					matrix.postRotate(270);
-					break;
+			case ExifInterface.ORIENTATION_ROTATE_270:
+				matrix.postRotate(270);
+				break;
 			}
-			resizedBitmap = Bitmap.createBitmap(resizedBitmap, 0, 0, resizedBitmap.getWidth(), resizedBitmap.getHeight(), matrix, true);
+			resizedBitmap = Bitmap.createBitmap(resizedBitmap, 0, 0, resizedBitmap.getWidth(),
+					resizedBitmap.getHeight(), matrix, true);
 		} catch (final IOException e) {
 			e.printStackTrace();
 		}
 		return resizedBitmap;
 	}
-
 
 	/**
 	 * Get image original dimensions

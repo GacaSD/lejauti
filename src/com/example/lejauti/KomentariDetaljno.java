@@ -37,12 +37,12 @@ public class KomentariDetaljno extends Activity
 		TextView txtgrad = (TextView) findViewById(R.id.tvMainCity);
 		TextView txtUserLokacija = (TextView) findViewById(R.id.txtUserLokacija);
 
-
 		txtKom.setText(intent.getStringExtra("TekstKom"));
 		txtDatum.setText(intent.getStringExtra("Datum"));
 		txtOcena.setText(intent.getStringExtra("Ocena"));
 		txtUser.setText(intent.getStringExtra("User"));
 		txtgrad.setText(intent.getStringExtra("city"));
+		mImage.setImageBitmap(JSONParser.decodeImage(intent.getStringExtra("image")));
 		if (intent.getStringExtra("drzava") != null) {
 			txtUserLokacija.setText(intent.getStringExtra("drzava") + ", " + intent.getStringExtra("grad"));
 		} else

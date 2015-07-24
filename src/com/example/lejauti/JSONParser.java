@@ -1,9 +1,11 @@
 package com.example.lejauti;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -28,10 +30,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Environment;
 import android.os.StrictMode;
 import android.util.Base64;
 import android.util.Log;
@@ -48,7 +52,7 @@ public class JSONParser {
 
 	@SuppressLint("NewApi")
 	public static JSONObject getJSON(String adresa) {
-		Log.d("", "adresa: " + adresa);
+		Log.d("", "Reading from address: " + adresa);
 		String tmp = "";
 		URL url = null;
 		try {
@@ -66,7 +70,10 @@ public class JSONParser {
 				json.append(tmp).append("\n");
 			reader.close();
 
-			JSONObject data = new JSONObject(json.toString());
+			// Parse response
+			String response = json.toString();
+			Log.d("", "response: " + response);
+			JSONObject data = new JSONObject(response);
 
 			// This value will be 404 if the request was not
 			// successful
@@ -93,7 +100,7 @@ public class JSONParser {
 		return encodedString;
 	}
 
-	public static Bitmap decodeImage(String encodedString) { 
+	public static Bitmap decodeImage(String encodedString) {
 		byte[] decodedString = Base64.decode(encodedString, Base64.DEFAULT);
 		return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
 	}
@@ -168,7 +175,8 @@ public class JSONParser {
 
 	// function get json from url
 	// by making HTTP POST method
-	public static JSONObject makeHttpPostRequest(AppActivity activity, String url, HashMap<String, Object> params) throws Exception {
+	public static JSONObject makeHttpPostRequest(AppActivity activity, String url, HashMap<String, Object> params)
+			throws Exception {
 
 		// Making HTTP request
 		DefaultHttpClient httpClient = new DefaultHttpClient();
@@ -295,7 +303,10 @@ public class JSONParser {
 		// Check for binary content
 		try {
 			for (final String entry : files.keySet()) {
-				postData.add(new BasicNameValuePair(entry, getEncodedDrawable(MultiPhotoSelectActivity.decodeScaledFile(files.get(entry).getAbsolutePath(), activity.getScreenWidth(activity) / 3, activity.getScreenHeight(activity) / 3))));
+				String encoded = getEncodedDrawable(
+						MultiPhotoSelectActivity.decodeScaledFile(files.get(entry).getAbsolutePath(),
+								activity.getScreenWidth(activity) / 8, activity.getScreenHeight(activity) / 8));
+				postData.add(new BasicNameValuePair(entry, encoded));
 			}
 			entity = new UrlEncodedFormEntity(postData, "UTF-8");
 		} catch (final UnsupportedEncodingException e) {
@@ -305,9 +316,25 @@ public class JSONParser {
 		return entity;
 	}
 
+	public static void saveToFile(Context mContext, String text) {
+		try {
+			final String cachePath = Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())
+					&& mContext.getExternalCacheDir() != null ? mContext.getExternalCacheDir().getPath()
+							: mContext.getCacheDir().getPath();
+			// Create file
+			FileWriter fstream = new FileWriter(cachePath + "/fileName.txt");
+			BufferedWriter out = new BufferedWriter(fstream);
+			out.write(text);
+			// Close the output stream
+			out.close();
+		} catch (Exception e) {// Catch exception if any
+			System.err.println("Error: " + e.getMessage());
+		}
+	}
+
 	public static String getEncodedDrawable(Bitmap bitmap) {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+		bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos);
 		return Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
 	}
 }

@@ -43,14 +43,10 @@ public class Galerija extends Activity {
 				JSONArray main = jsonCities.getJSONArray("slikemesta");
 
 				if (main != null) {
-
 					for (int i = 0; i < main.length(); i++) {
 						JSONObject c = main.getJSONObject(i);
-
-						listaSlika.add(c.getString("slika"));
-
+						listaSlika.add(c.getString("image"));
 					}
-
 				}
 
 			} catch (JSONException e) {
@@ -104,16 +100,10 @@ public class Galerija extends Activity {
 
 			if (convertView == null) {
 				convertView = mInflater.inflate(R.layout.galerija_item, null);
-
-				ImageView mImage = (ImageView) convertView
-						.findViewById(R.id.ivGalerija);
-
-				mImage.setImageBitmap(JSONParser.decodeImage( listaSlika.get(position)));
+				ImageView mImage = (ImageView) convertView.findViewById(R.id.ivGalerija);
+				mImage.setImageBitmap(JSONParser.decodeImage(listaSlika.get(position)));
 			}
-
 			return convertView;
 		}
-
 	}
-
 }

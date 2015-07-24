@@ -53,7 +53,7 @@ public class AddComment extends AppActivity {
 	private static final String UPLOAD_PHOTOS = "http://medinapartments.com/apartmani/upload.php";
 	// ids
 	private static final String TAG_SUCCESS = "success", TAG_MESSAGE = "message";
-	ArrayList<String> selectedItems = new ArrayList<String>(), selectedPlaces = new ArrayList<String>();
+	ArrayList<String> selectedImages = new ArrayList<String>(), selectedPlaces = new ArrayList<String>();
 	TextView txtCurrent;
 
 	@Override
@@ -72,6 +72,8 @@ public class AddComment extends AppActivity {
 		txtMape.setText("(0)");
 		send.setVisibility(View.VISIBLE);
 
+		selectedImages.add("/storage/emulated/0/DCIM/Camera/20150724_095749.jpg");
+
 		showData(getIntent());
 	}
 
@@ -81,7 +83,7 @@ public class AddComment extends AppActivity {
 	}
 
 	public void openImageGalery(View view) {
-		selectedItems = null;
+		selectedImages = null;
 		Intent intent = new Intent(this, MultiPhotoSelectActivity.class);
 		startActivityForResult(intent, REQUEEST_CODE_CAMERA);
 	}
@@ -142,20 +144,21 @@ public class AddComment extends AppActivity {
 				comment.put("maps", selectedPlaces.toString().replace("[", "").replace("]", ""));
 
 				try {
-					JSONObject jsonComment = JSONParser.makeHttpPostRequest(AddComment.this, "http://medinapartments.com/apartmani/addComment.php", comment);
+					JSONObject jsonComment = JSONParser.makeHttpPostRequest(AddComment.this,
+							"http://medinapartments.com/apartmani/addComment.php", comment);
 					final String id = jsonComment.getString("commentID");
 
 					// Image upload
-					if (selectedItems != null && selectedItems.size() != 0) {
-						for (int i = 0; i < selectedItems.size(); i++) {
-							Log.d("", "i: " + selectedItems.get(i));
+					if (selectedImages != null && selectedImages.size() != 0) {
+						for (int i = 0; i < selectedImages.size(); i++) {
+							Log.d("", "i: " + selectedImages.get(i));
 
 							HashMap<String, Object> image = new HashMap<String, Object>();
-							image.put("image", new File(selectedItems.get(i)));
-							image.put("slika", "");
+							image.put("image", new File(selectedImages.get(i)));
 							image.put("isDefault", i == 0 ? "1" : "0");
 							image.put("komentarID", id);
-							jsonComment = JSONParser.makeHttpPostRequest(AddComment.this, "http://medinapartments.com/apartmani/upload.php", image);
+							jsonComment = JSONParser.makeHttpPostRequest(AddComment.this,
+									"http://medinapartments.com/apartmani/upload.php", image);
 						}
 					}
 				} catch (Exception e) {
@@ -201,7 +204,8 @@ public class AddComment extends AppActivity {
 			});
 
 			return dialog;
-		} catch (final Exception e) {}
+		} catch (final Exception e) {
+		}
 		return null;
 	}
 
@@ -212,17 +216,17 @@ public class AddComment extends AppActivity {
 		// Check data
 		if (resultCode == RESULT_OK) {
 			switch (requestCode) {
-				case REQUEEST_CODE_CAMERA:
-					selectedItems = data.getStringArrayListExtra("selectedPhotos");
-					numCom.setText("(" + String.valueOf(selectedItems.size()) + ")");
-					break;
-				case REQUEEST_CODE_MAP:
-					selectedPlaces = data.getStringArrayListExtra("data");
-					txtMape.setText("(" + String.valueOf(selectedPlaces.size()) + ")");
-					break;
-				case REQUEEST_CODE_NEW_CITY:
-					showData(data);
-					break;
+			case REQUEEST_CODE_CAMERA:
+				selectedImages = data.getStringArrayListExtra("selectedPhotos");
+				numCom.setText("(" + String.valueOf(selectedImages.size()) + ")");
+				break;
+			case REQUEEST_CODE_MAP:
+				selectedPlaces = data.getStringArrayListExtra("data");
+				txtMape.setText("(" + String.valueOf(selectedPlaces.size()) + ")");
+				break;
+			case REQUEEST_CODE_NEW_CITY:
+				showData(data);
+				break;
 			}
 		}
 
