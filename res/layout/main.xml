@@ -1,0 +1,40 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tableLayout1"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#D8C49A"
+    android:orientation="vertical" >
+
+    <include
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/header" />
+
+    <include
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/tab" />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/pager"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:overScrollMode="never"
+        android:scrollbars="none" >
+
+        <fragment
+            android:id="@+id/frag_cities"
+            android:name="com.example.lejauti.main.MainFragment_Cities"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            class="com.example.lejauti.main.MainFragment_Cities" />
+
+        <fragment
+            android:id="@+id/frag_current"
+            android:name="com.example.lejauti.main.MainFragment_Current"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            class="com.example.lejauti.main.Fragment_CommentsList" />
+    </android.support.v4.view.ViewPager>
+
+</LinearLayout>
