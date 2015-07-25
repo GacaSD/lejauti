@@ -57,9 +57,9 @@
 
     <TextView
         android:id="@+id/txtKomentar"
-        android:background="@drawable/bg_comment_item_bottom"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/bg_comment_item_bottom"
         android:textColor="@color/black"
         android:textSize="12dp" />
 

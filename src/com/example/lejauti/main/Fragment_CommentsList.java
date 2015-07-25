@@ -17,6 +17,14 @@ import Modeli.Komentar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.AvoidXfermode.Mode;
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -205,7 +213,12 @@ public class Fragment_CommentsList extends LoadingFragment implements OnItemClic
 			Komentar k = mList.get(position);
 			if (!k.getSlika().equals("null")) {
 				JSONParser.saveToFile(mContext, k.getSlika());
-				mImage.setImageBitmap(JSONParser.decodeImage(k.getSlika()));
+				Bitmap map = JSONParser.decodeImage(k.getSlika());
+				if (map != null) {
+					mImage.setImageBitmap(map);
+				} else {
+					mImage.setImageResource(R.drawable.download);
+				}
 			} else {
 				mImage.setImageResource(R.drawable.download);
 			}
@@ -218,6 +231,5 @@ public class Fragment_CommentsList extends LoadingFragment implements OnItemClic
 
 			return convertView;
 		}
-
 	}
 }

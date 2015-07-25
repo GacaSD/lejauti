@@ -7,6 +7,7 @@ import com.example.lejauti.galery.Galerija;
 import Modeli.Komentar;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -39,7 +40,15 @@ public class KomentariDetaljno extends Activity
 		txtOcena.setText(intent.getStringExtra("Ocena"));
 		txtUser.setText(intent.getStringExtra("User"));
 		txtgrad.setText(intent.getStringExtra("city"));
-		mImage.setImageBitmap(JSONParser.decodeImage(intent.getStringExtra("image")));
+		
+		// Set image
+		Bitmap map = JSONParser.decodeImage(intent.getStringExtra("image"));
+		if (map != null) {
+			mImage.setImageBitmap(map);
+		} else {
+			mImage.setImageResource(R.drawable.download);
+		}
+		
 		if (intent.getStringExtra("drzava") != null) {
 			txtUserLokacija.setText(intent.getStringExtra("drzava") + ", " + intent.getStringExtra("grad"));
 		} else
