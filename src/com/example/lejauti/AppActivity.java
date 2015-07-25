@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 public class AppActivity extends Activity {
 
@@ -47,7 +48,7 @@ public class AppActivity extends Activity {
 			view.setPadding(left, top, right, bottom);
 		}
 	}
-	
+
 	/**
 	 * Get the width of the screen.
 	 *
@@ -93,5 +94,8 @@ public class AppActivity extends Activity {
 		return size;
 	}
 
+	public void showToast(String text) {
+		Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
+	}
 
 }

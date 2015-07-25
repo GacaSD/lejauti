@@ -14,7 +14,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -54,10 +53,8 @@ public class ListaDrzava extends Activity implements OnItemClickListener {
 		if (jsonCountries != null) {
 			try {
 				JSONArray main = jsonCountries.getJSONArray("drzave");
-				Log.i("main", main.toString());
 				listaDrzava = new ArrayList<Drzava>();
 				if (main != null) {
-					Log.i("main", "json nije prazan");
 					for (int i = 0; i < main.length(); i++) {
 						JSONObject c = main.getJSONObject(i);
 						Drzava d = new Drzava();
@@ -65,13 +62,9 @@ public class ListaDrzava extends Activity implements OnItemClickListener {
 						d.setId(c.getInt("drzavaID"));
 						d.setName(c.getString("nazivDrzava"));
 						listaDrzava.add(d);
-						Log.i("num", String.valueOf(listaDrzava.size()));
 					}
-
 				}
-
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
@@ -111,7 +104,6 @@ public class ListaDrzava extends Activity implements OnItemClickListener {
 		SparseBooleanArray mSparseBooleanArray;
 
 		public ImageAdapter(Context context, ArrayList<Drzava> listaDrzava) {
-			// TODO Auto-generated constructor stub
 			mContext = context;
 			mInflater = LayoutInflater.from(mContext);
 			mSparseBooleanArray = new SparseBooleanArray();
@@ -156,8 +148,6 @@ public class ListaDrzava extends Activity implements OnItemClickListener {
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-		// TODO Auto-generated method stub
-		Log.i("listaDrzava", IsList);
 		Drzava d = (Drzava) view.getTag();
 
 		Intent intent;

@@ -9,7 +9,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.example.lejauti.JSONParser;
-import com.example.lejauti.ListaDrzava;
 import com.example.lejauti.ListaGradova;
 import com.example.lejauti.ListaKomentara;
 import com.example.lejauti.LoadingFragment;
@@ -43,6 +42,7 @@ public class MainFragment_Cities extends LoadingFragment {
 	ImageView ivWhetherIcon;
 	private ImageView imGlavniGrad;
 	ListView mList;
+	private Grad current = null, capital = null;
 
 	// Data
 	ArrayList<HashMap<String, Grad>> listaGradova = new ArrayList<HashMap<String, Grad>>();
@@ -58,7 +58,8 @@ public class MainFragment_Cities extends LoadingFragment {
 		Intent intent = getActivity().getIntent();
 		country = intent.getStringExtra("country");
 		final String strRegUrl = country.replaceAll(" ", "%20");
-		return JSONParser.getJSON("http://medinapartments.com/apartmani/getTownByCountryName.php?nazivDrzava=%27" + strRegUrl + "%27");
+		return JSONParser.getJSON(
+				"http://medinapartments.com/apartmani/getTownByCountryName.php?nazivDrzava=%27" + strRegUrl + "%27");
 	}
 
 	@Override
@@ -110,10 +111,7 @@ public class MainFragment_Cities extends LoadingFragment {
 
 				// Check if current city
 				if (objGrad.getNaziv().equals(CurrentParameters.getCurrentCity())) {
-					CurrentParameters.setMestoID(String.valueOf(objGrad.getMestoID()));
-
-					// Load current city comments
-					laodCurrent(objGrad);
+					current = objGrad;
 				}
 
 				// Split capital
@@ -129,9 +127,10 @@ public class MainFragment_Cities extends LoadingFragment {
 				} else {
 
 					// Fill header/capital
-					imGlavniGrad.setImageBitmap(objGrad.getSlika());
-					txtGrad.setText(objGrad.getNaziv());
-					JSONObject json = Helper.getJSON(String.format(OPEN_WEATHER_MAP_API, objGrad.getNaziv()));
+					capital = objGrad;
+					imGlavniGrad.setImageBitmap(capital.getSlika());
+					txtGrad.setText(capital.getNaziv());
+					JSONObject json = Helper.getJSON(String.format(OPEN_WEATHER_MAP_API, capital.getNaziv()));
 					if (json != null) {
 						setWeter(json);
 					}
@@ -140,16 +139,26 @@ public class MainFragment_Cities extends LoadingFragment {
 						@Override
 						public void onClick(View v) {
 							Intent intent = new Intent(getActivity(), ListaKomentara.class);
-							intent.putExtra("MestoID", String.valueOf(objGrad.getMestoID()));
-							intent.putExtra("Naziv", objGrad.getNaziv());
+							intent.putExtra("MestoID", String.valueOf(capital.getMestoID()));
+							intent.putExtra("Naziv", capital.getNaziv());
 							startActivity(intent);
 						}
 					});
 				}
 			}
+
+			// Load current city comments
+			if (current != null) {
+				CurrentParameters.setMestoID(String.valueOf(current.getMestoID()));
+				loadCurrent(current);
+			} else {
+				CurrentParameters.setMestoID(String.valueOf(capital.getMestoID()));
+				loadCurrent(capital);
+			}
 		} catch (JSONException e1) {
 			e1.printStackTrace();
 		}
+
 		setTime();
 		mList.addHeaderView(header);
 
@@ -163,7 +172,7 @@ public class MainFragment_Cities extends LoadingFragment {
 		mList.setAdapter(new ImageAdapter(getActivity(), listaGradova));
 	}
 
-	public void laodCurrent(Grad objGrad) {
+	public void loadCurrent(Grad objGrad) {
 		Intent intent = new Intent(getActivity(), ListaKomentara.class);
 		intent.putExtra("isCurent", "1");
 		intent.putExtra("MestoID", CurrentParameters.getMestoID());
@@ -183,7 +192,8 @@ public class MainFragment_Cities extends LoadingFragment {
 			JSONObject details = json.getJSONArray("weather").getJSONObject(0);
 			JSONObject main = json.getJSONObject("main");
 			txtWhether.setText(String.format("%.2f", main.getDouble("temp")) + " ℃");
-			setWeatherIcon(details.getInt("id"), json.getJSONObject("sys").getLong("sunrise") * 1000, json.getJSONObject("sys").getLong("sunset") * 1000);
+			setWeatherIcon(details.getInt("id"), json.getJSONObject("sys").getLong("sunrise") * 1000,
+					json.getJSONObject("sys").getLong("sunset") * 1000);
 		} catch (Exception e) {
 			Log.e("SimpleWeather", "One or more fields not found in the JSON data");
 		}
@@ -201,24 +211,24 @@ public class MainFragment_Cities extends LoadingFragment {
 			}
 		} else {
 			switch (id) {
-				case 2:
-					icon = R.drawable.grmljevina;
-					break;
-				case 3:
-					icon = R.drawable.kisica;
-					break;
-				case 7:
-					icon = R.drawable.magla;
-					break;
-				case 8:
-					icon = R.drawable.oblacno;// R.drawable.oblacno
-					break;
-				case 6:
-					icon = R.drawable.sneg;
-					break;
-				case 5:
-					icon = R.drawable.kisa;
-					break;
+			case 2:
+				icon = R.drawable.grmljevina;
+				break;
+			case 3:
+				icon = R.drawable.kisica;
+				break;
+			case 7:
+				icon = R.drawable.magla;
+				break;
+			case 8:
+				icon = R.drawable.oblacno;// R.drawable.oblacno
+				break;
+			case 6:
+				icon = R.drawable.sneg;
+				break;
+			case 5:
+				icon = R.drawable.kisa;
+				break;
 			}
 		}
 		ImageView ivWhetherIcon = (ImageView) findViewById(R.id.ivWhetherIcon);

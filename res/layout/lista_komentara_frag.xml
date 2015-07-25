@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
+    android:layout_height="fill_parent"
+    android:background="#D8C49A" >
 
     <include layout="@layout/z__preloader" />
 
@@ -9,9 +10,8 @@
         android:id="@+id/empty"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:background="#ffffff"
         android:gravity="center"
-        android:text="No comments, tap here to add one!"
+        android:text="No comments, add one!"
         android:textColor="#7f777a"
         android:visibility="gone" />
 
@@ -19,7 +19,6 @@
         android:id="@+id/content"
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
-        android:background="#D8C49A"
         android:orientation="vertical"
         android:visibility="gone" >
 
@@ -27,9 +26,10 @@
             android:id="@+id/list"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:orientation="vertical" />
+            android:divider="@color/transparent"
+            android:dividerHeight="4dp" />
 
-         <ImageView
+        <ImageView
             android:id="@+id/btnComments"
             style="@style/btn_add_comment" />
     </RelativeLayout>

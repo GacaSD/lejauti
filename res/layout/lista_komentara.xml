@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<fragment xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/frag_current"
-    android:name="com.example.lejauti.main.MainFragment_Current"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    class="com.example.lejauti.main.Fragment_CommentsList" />
+    android:orientation="vertical" >
+
+    <include layout="@layout/header" />
+
+    <fragment
+        android:id="@+id/frag_current"
+        android:name="com.example.lejauti.main.MainFragment_Current"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        class="com.example.lejauti.main.Fragment_CommentsList" />
+
+</LinearLayout>

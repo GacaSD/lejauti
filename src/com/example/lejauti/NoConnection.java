@@ -7,8 +7,6 @@ import java.util.List;
 
 import com.example.lejauti.main.MainActivity;
 
-import Modeli.Grad;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Address;
@@ -19,19 +17,18 @@ import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
-public class NoConnection extends Activity {
+public class NoConnection extends AppActivity {
 
 	protected LocationManager locationManager;
 	protected LocationListener locationListener;
 	protected Location loc;
 	String city;
 	String country;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.noconnection);
 	}
@@ -40,20 +37,18 @@ public class NoConnection extends Activity {
 		if (hasActiveInternetConnection()) {
 			setLocation();
 			if (city != null && country != null) {
-				Intent openStartingPoint = new Intent(NoConnection.this,
-						MainActivity.class);
+				Intent openStartingPoint = new Intent(NoConnection.this, MainActivity.class);
 				openStartingPoint.putExtra("city", city);
 				openStartingPoint.putExtra("country", country);
 				startActivity(openStartingPoint);
 			} else {
-				Intent openStartingPoint = new Intent(NoConnection.this,
-						ListaDrzava.class);
+				Intent openStartingPoint = new Intent(NoConnection.this, ListaDrzava.class);
 				openStartingPoint.putExtra("IsList", "1");
 				openStartingPoint.putExtra("city", city);
 				openStartingPoint.putExtra("country", country);
 				startActivity(openStartingPoint);
 			}
-		
+
 		}
 
 	}
@@ -61,8 +56,7 @@ public class NoConnection extends Activity {
 	private void setLocation() {
 
 		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		loc = locationManager
-				.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+		loc = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 		city = null;
 		country = null;
 		if (loc != null) {
@@ -70,50 +64,42 @@ public class NoConnection extends Activity {
 			Geocoder geocoder = new Geocoder(this);
 			List<Address> addressList = null;
 			try {
-				addressList = geocoder.getFromLocation(loc.getLatitude(),
-						loc.getLongitude(), 2);
+				addressList = geocoder.getFromLocation(loc.getLatitude(), loc.getLongitude(), 2);
 			} catch (IOException e) {
-				Log.i("MyActivity", e.getMessage());
-
 			}
 			if (addressList != null) {
 				Address address = addressList.get(0);
 				if (address != null) {
 					city = address.getAddressLine(1);
 					country = address.getCountryName();
-
 				} else {
 					// .setText("Unable to determine the city.");
 				}
-
 			}
-
 		}
 	}
+
 	private boolean isNetworkAvailable() {
 		ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-		NetworkInfo activeNetworkInfo = connectivityManager
-				.getActiveNetworkInfo();
+		NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
 		return activeNetworkInfo != null;
 	}
 
 	public boolean hasActiveInternetConnection() {
 		if (isNetworkAvailable()) {
 			try {
-				HttpURLConnection urlc = (HttpURLConnection) (new URL(
-						"http://www.google.com").openConnection());
+				HttpURLConnection urlc = (HttpURLConnection) (new URL("http://www.google.com").openConnection());
 				urlc.setRequestProperty("User-Agent", "Test");
 				urlc.setRequestProperty("Connection", "close");
 				urlc.setConnectTimeout(1500);
 				urlc.connect();
 				return (urlc.getResponseCode() == 200);
 			} catch (IOException e) {
-				Log.e("No connection", "Error checking internet connection", e);
+				showToast("Error checking internet connection");
 			}
 		} else {
-			Log.d("Connected", "No network available!");
+			showToast("No network available");
 		}
 		return false;
 	}
-
 }

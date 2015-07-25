@@ -2,7 +2,6 @@ package com.example.lejauti;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileWriter;
@@ -193,7 +192,7 @@ public class JSONParser {
 
 		inputStream.close();
 		json = jsonData.toString();
-		Log.d("", "Response:" + json);
+		// Log.d("", "Response:" + json);
 
 		// try parse the string to a JSON object
 		jObj = new JSONObject(json);

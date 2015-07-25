@@ -1,7 +1,5 @@
 package Modeli;
 
-import android.graphics.Bitmap;
-
 public class Komentar {
 	private String user;
 	private int komentarID;

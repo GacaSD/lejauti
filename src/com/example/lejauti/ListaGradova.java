@@ -1,7 +1,5 @@
 package com.example.lejauti;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 
 import org.json.JSONArray;
@@ -14,7 +12,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -67,7 +64,6 @@ public class ListaGradova extends Activity implements OnItemClickListener {
 			try {
 				JSONArray main = jsonTowns.getJSONArray("slikemesta");
 				if (main != null) {
-					Log.i("main", main.toString());
 					for (int i = 0; i < main.length(); i++) {
 						JSONObject c = main.getJSONObject(i);
 						Grad g = new Grad();
@@ -75,13 +71,10 @@ public class ListaGradova extends Activity implements OnItemClickListener {
 						g.setMestoID(c.getInt("mestoID"));
 						g.setNaziv(c.getString("naziv"));
 						listaGradova.add(g);
-						Log.i("num", String.valueOf(listaGradova.size()));
 					}
-
 				}
 
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
@@ -129,13 +122,11 @@ public class ListaGradova extends Activity implements OnItemClickListener {
 		SparseBooleanArray mSparseBooleanArray;
 
 		public ImageAdapter(Context context, ArrayList<Grad> listaGradova) {
-			// TODO Auto-generated constructor stub
 			mContext = context;
 			mInflater = LayoutInflater.from(mContext);
 			mSparseBooleanArray = new SparseBooleanArray();
 			mList = new ArrayList<Grad>();
 			this.mList = listaGradova;
-
 		}
 
 		@Override
@@ -175,7 +166,6 @@ public class ListaGradova extends Activity implements OnItemClickListener {
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-		// TODO Auto-generated method stub
 		Grad g = (Grad) view.getTag();
 		if (!mChangeCity) {
 			Intent intent = new Intent(this, AddComment.class);

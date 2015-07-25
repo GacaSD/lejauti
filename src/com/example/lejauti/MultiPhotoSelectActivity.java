@@ -1,15 +1,10 @@
 package com.example.lejauti;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import android.annotation.SuppressLint;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -17,33 +12,20 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
-import android.graphics.Point;
 import android.media.ExifInterface;
-import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v4.util.LruCache;
-import android.util.Base64;
-import android.util.Log;
-import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
-import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.Toast;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.ImageView.ScaleType;
 import android.widget.RelativeLayout;
 
 /**
@@ -54,6 +36,7 @@ public class MultiPhotoSelectActivity extends AppActivity {
 	private ArrayList<String> imageUrls, mSelectedImages = new ArrayList<String>();
 	private DisplayImageOptions options;
 	private LruCache<String, Bitmap> mCache;
+	private Boolean mActivityFinished = false;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -96,7 +79,6 @@ public class MultiPhotoSelectActivity extends AppActivity {
 	public void btnChoosePhotosClick(View v) {
 		Intent intent = new Intent(this, AddComment.class);
 		intent.putExtra("selectedPhotos", mSelectedImages);
-		Log.d("", "onActivityResult: " + mSelectedImages.size());
 		setResult(Activity.RESULT_OK, intent);
 		finish();
 	}
@@ -141,7 +123,6 @@ public class MultiPhotoSelectActivity extends AppActivity {
 
 			// your image file path
 			final String url = mList.get(position);
-			File file = new File(url);
 			int dimen = (int) (getScreenWidth(MultiPhotoSelectActivity.this) * 0.33);
 			mImage.setTag(url);
 			mImage.setLayoutParams(new RelativeLayout.LayoutParams(dimen, dimen));
@@ -164,6 +145,11 @@ public class MultiPhotoSelectActivity extends AppActivity {
 		}
 
 		public void loadImage(final ImageView image) {
+
+			// Check if app finished
+			if (mActivityFinished) {
+				return;
+			}
 
 			// Check cache
 			String url = image.getTag().toString();
@@ -189,6 +175,12 @@ public class MultiPhotoSelectActivity extends AppActivity {
 				}.execute(url);
 			}
 		}
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		mActivityFinished = true;
 	}
 
 	public static String getCachePath(Context context) {

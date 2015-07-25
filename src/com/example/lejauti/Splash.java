@@ -19,7 +19,7 @@ import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.util.Log;
+import android.widget.Toast;
 
 public class Splash extends Activity {
 
@@ -31,7 +31,6 @@ public class Splash extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.splash);
 		Thread timer = new Thread() {
@@ -40,9 +39,7 @@ public class Splash extends Activity {
 
 				try {
 					sleep(3000);
-
 				} catch (InterruptedException e) {
-
 					e.printStackTrace();
 				} finally {
 
@@ -82,8 +79,6 @@ public class Splash extends Activity {
 			try {
 				addressList = geocoder.getFromLocation(loc.getLatitude(), loc.getLongitude(), 2);
 			} catch (IOException e) {
-				Log.i("MyActivity", e.getMessage());
-
 			}
 			if (addressList != null) {
 				Address address = addressList.get(0);
@@ -104,7 +99,6 @@ public class Splash extends Activity {
 
 	@Override
 	protected void onPause() {
-		// TODO Auto-generated method stub
 		super.onPause();
 		finish();
 	}
@@ -119,10 +113,10 @@ public class Splash extends Activity {
 				urlc.connect();
 				return (urlc.getResponseCode() == 200);
 			} catch (IOException e) {
-				Log.e("No connection", "Error checking internet connection", e);
+				showToast("Error checking internet connection");
 			}
 		} else {
-			Log.d("Connected", "No network available!");
+			showToast("No network available");
 		}
 		return false;
 	}
@@ -131,6 +125,10 @@ public class Splash extends Activity {
 		ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
 		return activeNetworkInfo != null;
+	}
+
+	private void showToast(String text) {
+		Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
 	}
 
 }

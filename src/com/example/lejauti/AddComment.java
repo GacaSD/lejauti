@@ -1,25 +1,16 @@
 package com.example.lejauti;
 
 import java.io.File;
-import java.lang.annotation.Retention;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import Modeli.CurrentParameters;
-import Modeli.Grad;
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -44,15 +35,10 @@ public class AddComment extends AppActivity {
 	String mestoID;
 	int odobren = 0;
 	JSONParser jsonParser = new JSONParser();
-	private ProgressDialog pDialog;
 	ImageView send;
 	TextView numCom, txtMape;
-	// private static final String POST_COMMENT_URL =
-	// "http://10.0.2.2/androidConnect/addComment.php";
 	private static final String POST_COMMENT_URL = "http://medinapartments.com/apartmani/addComment.php";
 	private static final String UPLOAD_PHOTOS = "http://medinapartments.com/apartmani/upload.php";
-	// ids
-	private static final String TAG_SUCCESS = "success", TAG_MESSAGE = "message";
 	ArrayList<String> selectedImages = new ArrayList<String>(), selectedPlaces = new ArrayList<String>();
 	TextView txtCurrent;
 
@@ -144,21 +130,18 @@ public class AddComment extends AppActivity {
 				comment.put("maps", selectedPlaces.toString().replace("[", "").replace("]", ""));
 
 				try {
-					JSONObject jsonComment = JSONParser.makeHttpPostRequest(AddComment.this,
-							"http://medinapartments.com/apartmani/addComment.php", comment);
+					JSONObject jsonComment = JSONParser.makeHttpPostRequest(AddComment.this, POST_COMMENT_URL, comment);
 					final String id = jsonComment.getString("commentID");
 
 					// Image upload
 					if (selectedImages != null && selectedImages.size() != 0) {
 						for (int i = 0; i < selectedImages.size(); i++) {
-							Log.d("", "i: " + selectedImages.get(i));
-
 							HashMap<String, Object> image = new HashMap<String, Object>();
+							Log.d("", "UPLOAD_PHOTOS: " + selectedImages.get(i));
 							image.put("image", new File(selectedImages.get(i)));
 							image.put("isDefault", i == 0 ? "1" : "0");
 							image.put("komentarID", id);
-							jsonComment = JSONParser.makeHttpPostRequest(AddComment.this,
-									"http://medinapartments.com/apartmani/upload.php", image);
+							jsonComment = JSONParser.makeHttpPostRequest(AddComment.this, UPLOAD_PHOTOS, image);
 						}
 					}
 				} catch (Exception e) {

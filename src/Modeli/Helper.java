@@ -36,7 +36,6 @@ public class Helper {
 
 			return data;
 		} catch (Exception e) {
-
 			Log.e("json", e.toString());
 			return null;
 		}
