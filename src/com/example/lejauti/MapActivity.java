@@ -92,21 +92,24 @@ public class MapActivity extends FragmentActivity {
 			}
 		});
 
-		googleMap.setOnMarkerClickListener(new OnMarkerClickListener() {
+		// Don't change markers if details 
+		if (!getIntent().getExtras().containsKey("from_details")) {
+			googleMap.setOnMarkerClickListener(new OnMarkerClickListener() {
 
-			@Override
-			public boolean onMarkerClick(Marker marker) {
-				marker.setVisible(false);
-				String locationToRemove = null;
-				for (String item : mPoints) {
-					if (item.equals(marker.getPosition().latitude + ":" + marker.getPosition().longitude)) {
-						locationToRemove = item;
+				@Override
+				public boolean onMarkerClick(Marker marker) {
+					marker.setVisible(false);
+					String locationToRemove = null;
+					for (String item : mPoints) {
+						if (item.equals(marker.getPosition().latitude + ":" + marker.getPosition().longitude)) {
+							locationToRemove = item;
+						}
 					}
+					mPoints.remove(locationToRemove);
+					return false;
 				}
-				mPoints.remove(locationToRemove);
-				return false;
-			}
-		});
+			});
+		}
 	}
 
 	@Override

@@ -74,13 +74,6 @@ public class JSONParser {
 			String response = json.toString();
 			Log.d("", "response: " + response);
 			JSONObject data = new JSONObject(response);
-
-			// This value will be 404 if the request was not
-			// successful
-			// if (data.getInt("cod") != 200) {
-			// return null;
-			// }
-
 			return data;
 		} catch (Exception e) {
 			Log.e("json", e.toString());

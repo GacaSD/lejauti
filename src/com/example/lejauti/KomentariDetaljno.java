@@ -63,6 +63,7 @@ public class KomentariDetaljno extends Activity
 		} else {
 			Intent intent = new Intent(this, MapActivity.class);
 			intent.putExtra("maps", maps);
+			intent.putExtra("from_details", true);
 			startActivity(intent);
 		}
 	}
