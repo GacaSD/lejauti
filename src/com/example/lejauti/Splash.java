@@ -18,7 +18,9 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.widget.Toast;
 
 public class Splash extends Activity {
@@ -33,37 +35,42 @@ public class Splash extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.splash);
-		Thread timer = new Thread() {
 
-			public void run() {
+		new AsyncTask<Void, Void, Boolean>() {
 
-				try {
-					sleep(3000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				} finally {
-
-					if (hasActiveInternetConnection()) {
-						setLocation();
-						if (city != null && country != null) {
-							Intent openStartingPoint = new Intent(Splash.this, MainActivity.class);
-							openStartingPoint.putExtra("country", CurrentParameters.getCurrentCountry());
-							startActivity(openStartingPoint);
-						} else {
-							Intent openStartingPoint = new Intent(Splash.this, ListaDrzava.class);
-							openStartingPoint.putExtra("IsList", "1");
-							startActivity(openStartingPoint);
-						}
-
-					} else {
-						Intent openStartingPoint = new Intent(Splash.this, NoConnection.class);
-						startActivity(openStartingPoint);
-					}
-				}
+			@Override
+			protected Boolean doInBackground(Void... params) {
+				return hasActiveInternetConnection();
 			}
 
-		};
-		timer.start();
+			@Override
+			protected void onPostExecute(Boolean hasConnection) {
+
+				// Check network connection
+				if (hasConnection) {
+					setLocation();
+					if (city != null && country != null) {
+						Intent openStartingPoint = new Intent(Splash.this, MainActivity.class);
+						openStartingPoint.putExtra("country", CurrentParameters.getCurrentCountry());
+						startActivity(openStartingPoint);
+					} else {
+						Intent openStartingPoint = new Intent(Splash.this, ListaDrzava.class);
+						openStartingPoint.putExtra("IsList", "1");
+						startActivity(openStartingPoint);
+					}
+				} else {
+					new Handler().postDelayed(new Runnable() {
+
+						@Override
+						public void run() {
+							Intent openStartingPoint = new Intent(Splash.this, NoConnection.class);
+							startActivity(openStartingPoint);
+						}
+					}, 2500);
+				}
+
+			}
+		}.execute();
 	}
 
 	private void setLocation() {
@@ -87,13 +94,10 @@ public class Splash extends Activity {
 					country = address.getCountryName();
 					CurrentParameters.setCurrentCity(address.getAddressLine(1));
 					CurrentParameters.setCurrentCountry(address.getCountryName());
-
 				} else {
 					// .setText("Unable to determine the city.");
 				}
-
 			}
-
 		}
 	}
 
@@ -113,10 +117,8 @@ public class Splash extends Activity {
 				urlc.connect();
 				return (urlc.getResponseCode() == 200);
 			} catch (IOException e) {
-				showToast("Error checking internet connection");
+				return false;
 			}
-		} else {
-			showToast("No network available");
 		}
 		return false;
 	}
@@ -126,9 +128,4 @@ public class Splash extends Activity {
 		NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
 		return activeNetworkInfo != null;
 	}
-
-	private void showToast(String text) {
-		Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
-	}
-
 }

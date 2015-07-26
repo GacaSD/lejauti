@@ -48,9 +48,7 @@ public class NoConnection extends AppActivity {
 				openStartingPoint.putExtra("country", country);
 				startActivity(openStartingPoint);
 			}
-
 		}
-
 	}
 
 	private void setLocation() {

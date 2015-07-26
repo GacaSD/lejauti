@@ -43,6 +43,7 @@ public class MainFragment_Cities extends LoadingFragment {
 	private ImageView imGlavniGrad;
 	ListView mList;
 	private Grad current = null, capital = null;
+	private ViewGroup mCapitalHeader;
 
 	// Data
 	ArrayList<HashMap<String, Grad>> listaGradova = new ArrayList<HashMap<String, Grad>>();
@@ -81,13 +82,13 @@ public class MainFragment_Cities extends LoadingFragment {
 		mList = (ListView) findViewById(R.id.list);
 
 		// Get Header
-		ViewGroup header = (ViewGroup) View.inflate(getActivity(), R.layout.main_header, null);
-		txtGrad = (TextView) header.findViewById(R.id.txtCiyMain);
-		txtTime = (TextView) header.findViewById(R.id.txtTime);
-		txtWhether = (TextView) header.findViewById(R.id.txtWhether);
-		ivWhetherIcon = (ImageView) header.findViewById(R.id.ivWhetherIcon);
-		imGlavniGrad = (ImageView) header.findViewById(R.id.imageToShow);
-		txtCountry = (TextView) header.findViewById(R.id.tvMainCity);
+		mCapitalHeader = (ViewGroup) View.inflate(getActivity(), R.layout.main_header, null);
+		txtGrad = (TextView) mCapitalHeader.findViewById(R.id.txtCiyMain);
+		txtTime = (TextView) mCapitalHeader.findViewById(R.id.txtTime);
+		txtWhether = (TextView) mCapitalHeader.findViewById(R.id.txtWhether);
+		ivWhetherIcon = (ImageView) mCapitalHeader.findViewById(R.id.ivWhetherIcon);
+		imGlavniGrad = (ImageView) mCapitalHeader.findViewById(R.id.imageToShow);
+		txtCountry = (TextView) mCapitalHeader.findViewById(R.id.tvMainCity);
 
 		// Get cities
 		try {
@@ -134,7 +135,7 @@ public class MainFragment_Cities extends LoadingFragment {
 					if (json != null) {
 						setWeter(json);
 					}
-					header.setOnClickListener(new OnClickListener() {
+					mCapitalHeader.setOnClickListener(new OnClickListener() {
 
 						@Override
 						public void onClick(View v) {
@@ -160,7 +161,7 @@ public class MainFragment_Cities extends LoadingFragment {
 		}
 
 		setTime();
-		mList.addHeaderView(header);
+		mList.addHeaderView(mCapitalHeader);
 
 		// Small header
 		ViewGroup headerSmall = (ViewGroup) View.inflate(getActivity(), R.layout.main_header_small, null);
@@ -170,6 +171,8 @@ public class MainFragment_Cities extends LoadingFragment {
 
 		// Fill list
 		mList.setAdapter(new ImageAdapter(getActivity(), listaGradova));
+		mList.setDivider(null);
+		mList.setDividerHeight(0);
 	}
 
 	public void loadCurrent(Grad objGrad) {
@@ -231,8 +234,8 @@ public class MainFragment_Cities extends LoadingFragment {
 				break;
 			}
 		}
-		ImageView ivWhetherIcon = (ImageView) findViewById(R.id.ivWhetherIcon);
-		ivWhetherIcon.setBackgroundResource(icon);
+		ImageView ivWhetherIcon = (ImageView) mCapitalHeader.findViewById(R.id.ivWhetherIcon);
+		ivWhetherIcon.setImageResource(icon);
 	}
 
 	public class ImageAdapter extends BaseAdapter {
