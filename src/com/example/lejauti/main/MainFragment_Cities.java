@@ -97,54 +97,57 @@ public class MainFragment_Cities extends LoadingFragment {
 			// Show empty
 			if (cities.length() == 0) {
 				findViewById(R.id.empty).setVisibility(View.VISIBLE);
+				findViewById(R.id.content).setVisibility(View.GONE);
+				capital = null;
 				return;
-			}
-			HashMap<String, Grad> item = null;
-			for (int i = 0; i < cities.length(); i++) {
-				JSONObject city = cities.getJSONObject(i);
+			} else {
+				HashMap<String, Grad> item = null;
+				for (int i = 0; i < cities.length(); i++) {
+					JSONObject city = cities.getJSONObject(i);
 
-				// Create city object
-				final Grad objGrad = new Grad();
-				objGrad.setMestoID(city.getInt("mestoID"));
-				objGrad.setNaziv(city.getString("naziv"));
-				objGrad.setSlika(JSONParser.decodeImage(city.getString("slika")));
-				objGrad.setGlavni(city.getInt("isCapital"));
+					// Create city object
+					final Grad objGrad = new Grad();
+					objGrad.setMestoID(city.getInt("mestoID"));
+					objGrad.setNaziv(city.getString("naziv"));
+					objGrad.setSlika(JSONParser.decodeImage(city.getString("slika")));
+					objGrad.setGlavni(city.getInt("isCapital"));
 
-				// Check if current city
-				if (objGrad.getNaziv().equals(CurrentParameters.getCurrentCity())) {
-					current = objGrad;
-				}
-
-				// Split capital
-				if (objGrad.getGlavni() == 0) {
-					if (item == null) {
-						item = new HashMap<String, Grad>();
-						item.put("left", objGrad);
-						listaGradova.add(item);
-					} else {
-						item.put("right", objGrad);
-						item = null;
+					// Check if current city
+					if (objGrad.getNaziv().equals(CurrentParameters.getCurrentCity())) {
+						current = objGrad;
 					}
-				} else {
 
-					// Fill header/capital
-					capital = objGrad;
-					imGlavniGrad.setImageBitmap(capital.getSlika());
-					txtGrad.setText(capital.getNaziv());
-					JSONObject json = Helper.getJSON(String.format(OPEN_WEATHER_MAP_API, capital.getNaziv()));
-					if (json != null) {
-						setWeter(json);
-					}
-					mCapitalHeader.setOnClickListener(new OnClickListener() {
-
-						@Override
-						public void onClick(View v) {
-							Intent intent = new Intent(getActivity(), ListaKomentara.class);
-							intent.putExtra("MestoID", String.valueOf(capital.getMestoID()));
-							intent.putExtra("Naziv", capital.getNaziv());
-							startActivity(intent);
+					// Split capital
+					if (objGrad.getGlavni() == 0) {
+						if (item == null) {
+							item = new HashMap<String, Grad>();
+							item.put("left", objGrad);
+							listaGradova.add(item);
+						} else {
+							item.put("right", objGrad);
+							item = null;
 						}
-					});
+					} else {
+
+						// Fill header/capital
+						capital = objGrad;
+						imGlavniGrad.setImageBitmap(capital.getSlika());
+						txtGrad.setText(capital.getNaziv());
+						JSONObject json = Helper.getJSON(String.format(OPEN_WEATHER_MAP_API, capital.getNaziv()));
+						if (json != null) {
+							setWeter(json);
+						}
+						mCapitalHeader.setOnClickListener(new OnClickListener() {
+
+							@Override
+							public void onClick(View v) {
+								Intent intent = new Intent(getActivity(), ListaKomentara.class);
+								intent.putExtra("MestoID", String.valueOf(capital.getMestoID()));
+								intent.putExtra("Naziv", capital.getNaziv());
+								startActivity(intent);
+							}
+						});
+					}
 				}
 			}
 
@@ -152,9 +155,11 @@ public class MainFragment_Cities extends LoadingFragment {
 			if (current != null) {
 				CurrentParameters.setMestoID(String.valueOf(current.getMestoID()));
 				loadCurrent(current);
-			} else {
+			} else if (capital != null) {
 				CurrentParameters.setMestoID(String.valueOf(capital.getMestoID()));
 				loadCurrent(capital);
+			} else {
+				((MainActivity) getActivity()).loadCurrent();
 			}
 		} catch (JSONException e1) {
 			e1.printStackTrace();

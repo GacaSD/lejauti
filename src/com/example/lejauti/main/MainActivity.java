@@ -104,6 +104,10 @@ public class MainActivity extends AppActivity {
 		fragCurrent.load();
 	}
 
+	public void loadCurrent() {
+		fragCurrent.load();
+	}
+
 	public void search(View view) {
 		Intent intent = new Intent(this, ListaDrzava.class);
 		intent.putExtra("IsList", "1");

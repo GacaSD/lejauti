@@ -95,6 +95,7 @@ public class Fragment_CommentsList extends LoadingFragment implements OnItemClic
 				// Check empty
 				if (main.length() == 0) {
 					findViewById(R.id.empty).setVisibility(View.VISIBLE);
+					findViewById(R.id.content).setVisibility(View.GONE);
 					return;
 				}
 
