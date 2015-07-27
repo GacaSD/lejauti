@@ -5,6 +5,11 @@
 
     <include layout="@layout/z__preloader" />
 
+    <TextView
+        android:id="@+id/empty"
+        style="@style/empty"
+        android:text="Gallery is empty!\nTake some pictures first and select them." />
+
     <GridView
         android:id="@+id/gridview"
         android:layout_width="fill_parent"
@@ -20,13 +25,16 @@
         android:visibility="invisible" />
 
     <Button
-        android:id="@+id/button1"
+        android:id="@+id/btnSelectPhotos"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:onClick="btnChoosePhotosClick"
+        android:layout_marginBottom="5dp"
+        android:background="@color/red"
+        android:padding="10dp"
+        android:visibility="gone"
         android:text="Select Photos"
-        android:visibility="invisible" />
+        android:textColor="@color/white" />
 
 </RelativeLayout>

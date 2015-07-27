@@ -8,12 +8,8 @@
 
     <TextView
         android:id="@+id/empty"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:gravity="center"
-        android:text="No comments, add one!"
-        android:textColor="#7f777a"
-        android:visibility="gone" />
+        style="@style/empty"
+        android:text="No comments, add one!" />
 
     <ListView
         android:id="@+id/list"

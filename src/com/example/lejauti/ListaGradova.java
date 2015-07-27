@@ -79,7 +79,8 @@ public class ListaGradova extends Activity {
 				e.printStackTrace();
 			}
 
-			ListView list = (ListView) findViewById(R.id.gridview);
+			ListView list = (ListView) findViewById(R.id.list);
+			list.setVisibility(View.VISIBLE);
 			list.setAdapter(new ImageAdapter(this, listaGradova));
 		}
 	}
@@ -157,12 +158,11 @@ public class ListaGradova extends Activity {
 			});
 
 			// TextView txtKom, txtDatum, txtOcena, txtUser;
-			TextView txtNaziv = (TextView) convertView.findViewById(R.id.txtGrad);
+			TextView txtNaziv = (TextView) convertView;
 
 			Grad g = listaGradova.get(position);
 			txtNaziv.setText(g.getNaziv());
 			convertView.setTag(g);
-
 			return convertView;
 		}
 

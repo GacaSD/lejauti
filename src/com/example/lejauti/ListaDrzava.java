@@ -137,7 +137,7 @@ public class ListaDrzava extends Activity {
 			});
 
 			// TextView txtKom, txtDatum, txtOcena, txtUser;
-			TextView txtNaziv = (TextView) convertView.findViewById(R.id.txtDrzava);
+			TextView txtNaziv = (TextView) convertView;
 
 			Drzava d = listaDrzava.get(position);
 			txtNaziv.setText(d.getName());

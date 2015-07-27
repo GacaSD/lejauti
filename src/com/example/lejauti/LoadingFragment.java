@@ -35,8 +35,10 @@ public abstract class LoadingFragment extends Fragment {
 					findViewById(R.id.preloader).setVisibility(View.GONE);
 					findViewById(R.id.list).setVisibility(View.VISIBLE);
 					View btnComment = findViewById(R.id.btnComments);
-					btnComment.setVisibility(View.VISIBLE);
-					btnComment.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.abc_fade_in));
+					if (btnComment != null) {
+						btnComment.setVisibility(View.VISIBLE);
+						btnComment.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.abc_fade_in));
+					}
 					onSuccess(result);
 				} else {
 					Toast.makeText(getActivity(), R.string.network_error_occurred, Toast.LENGTH_SHORT).show();

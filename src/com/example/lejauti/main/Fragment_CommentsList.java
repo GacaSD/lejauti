@@ -31,7 +31,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class Fragment_CommentsList extends LoadingFragment implements OnItemClickListener {
+public class Fragment_CommentsList extends LoadingFragment {
 
 	public static final int REQUEST_CODE_ADD_COMMENT = 1;
 
@@ -90,7 +90,7 @@ public class Fragment_CommentsList extends LoadingFragment implements OnItemClic
 				if (main.length() == 0) {
 					findViewById(R.id.empty).setVisibility(View.VISIBLE);
 					findViewById(R.id.list).setVisibility(View.GONE);
-					findViewById(R.id.btnComments).setVisibility(View.VISIBLE);
+					findViewById(R.id.btnComments).setVisibility(cityID != null ? View.VISIBLE : View.GONE);
 					return;
 				}
 
@@ -121,15 +121,13 @@ public class Fragment_CommentsList extends LoadingFragment implements OnItemClic
 
 			// Set adapter
 			mList.setAdapter(new ImageAdapter(getActivity(), listaKomentara));
-			mList.setOnItemClickListener(this);
 		} else {
 			city = CurrentParameters.getCurrentCity();
 			cityID = CurrentParameters.getMestoID();
 		}
 	}
 
-	@Override
-	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+	public void onItemClick(View view, int position) {
 		Komentar k = (Komentar) view.getTag();
 		Intent intent = new Intent(getActivity(), KomentariDetaljno.class);
 		intent.putExtra("KomentarID", String.valueOf(k.getKomentarID()));
@@ -193,11 +191,18 @@ public class Fragment_CommentsList extends LoadingFragment implements OnItemClic
 
 		@SuppressLint("InflateParams")
 		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
+		public View getView(final int position, View convertView, ViewGroup parent) {
 
 			if (convertView == null) {
 				convertView = mInflater.inflate(R.layout.lista_komentara_item, null);
 			}
+			convertView.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					onItemClick(v, position);
+				}
+			});
 
 			// TextView txtKom, txtDatum, txtOcena, txtUser;
 

@@ -98,9 +98,8 @@ public class MainFragment_Cities extends LoadingFragment {
 			if (cities.length() == 0) {
 				findViewById(R.id.empty).setVisibility(View.VISIBLE);
 				findViewById(R.id.list).setVisibility(View.GONE);
-				findViewById(R.id.btnComments).setVisibility(View.VISIBLE);
+				findViewById(R.id.btnComments).setVisibility(View.GONE);
 				capital = null;
-				return;
 			} else {
 				HashMap<String, Grad> item = null;
 				for (int i = 0; i < cities.length(); i++) {

@@ -49,8 +49,7 @@ public class MultiPhotoSelectActivity extends AppActivity {
 			@Override
 			protected ArrayList<String> doInBackground(Void... params) {
 				final String[] columns = { MediaStore.Images.Media.DATA };
-				Cursor imagecursor = managedQuery(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, columns, null, null,
-						MediaStore.Images.Media.DATE_TAKEN + " DESC");
+				Cursor imagecursor = managedQuery(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, columns, null, null, MediaStore.Images.Media.DATE_TAKEN + " DESC");
 				ArrayList<String> imageUrls = new ArrayList<String>();
 				for (int i = 0; i < imagecursor.getCount(); i++) {
 					imagecursor.moveToPosition(i);
@@ -65,18 +64,31 @@ public class MultiPhotoSelectActivity extends AppActivity {
 			protected void onPostExecute(ArrayList<String> result) {
 
 				// Show content
-				findViewById(R.id.list).setVisibility(View.VISIBLE);
+				findViewById(R.id.gridview).setVisibility(View.VISIBLE);
 				findViewById(R.id.preloader).setVisibility(View.GONE);
+				if (result.size() == 0) {
+					findViewById(R.id.empty).setVisibility(View.VISIBLE);
+				} else {
+					View btnSelectPhotos = findViewById(R.id.btnSelectPhotos);
+					btnSelectPhotos.setVisibility(View.VISIBLE);
+					btnSelectPhotos.setOnClickListener(new OnClickListener() {
 
-				// Load list
-				mCache = new LruCache<String, Bitmap>((int) (Runtime.getRuntime().maxMemory() / 1024) / 5);
-				GridView gridView = (GridView) findViewById(R.id.gridview);
-				gridView.setAdapter(new ImageAdapter(MultiPhotoSelectActivity.this, imageUrls = result));
+						@Override
+						public void onClick(View v) {
+							btnChoosePhotosClick();
+						}
+					});
+
+					// Load list
+					mCache = new LruCache<String, Bitmap>((int) (Runtime.getRuntime().maxMemory() / 1024) / 5);
+					GridView gridView = (GridView) findViewById(R.id.gridview);
+					gridView.setAdapter(new ImageAdapter(MultiPhotoSelectActivity.this, imageUrls = result));
+				}
 			}
 		}.execute();
 	}
 
-	public void btnChoosePhotosClick(View v) {
+	public void btnChoosePhotosClick() {
 		Intent intent = new Intent(this, AddComment.class);
 		intent.putExtra("selectedPhotos", mSelectedImages);
 		setResult(Activity.RESULT_OK, intent);
@@ -184,9 +196,7 @@ public class MultiPhotoSelectActivity extends AppActivity {
 	}
 
 	public static String getCachePath(Context context) {
-		return Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())
-				&& context.getExternalCacheDir() != null ? context.getExternalCacheDir().getPath()
-						: context.getCacheDir().getPath();
+		return Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()) && context.getExternalCacheDir() != null ? context.getExternalCacheDir().getPath() : context.getCacheDir().getPath();
 	}
 
 	/**
@@ -225,23 +235,21 @@ public class MultiPhotoSelectActivity extends AppActivity {
 		final Matrix matrix = new Matrix();
 		try {
 			final ExifInterface exif = new ExifInterface(file);
-			final int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION,
-					ExifInterface.ORIENTATION_NORMAL);
+			final int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
 			switch (orientation) {
-			case ExifInterface.ORIENTATION_ROTATE_90:
-				matrix.postRotate(90);
-				break;
+				case ExifInterface.ORIENTATION_ROTATE_90:
+					matrix.postRotate(90);
+					break;
 
-			case ExifInterface.ORIENTATION_ROTATE_180:
-				matrix.postRotate(180);
-				break;
+				case ExifInterface.ORIENTATION_ROTATE_180:
+					matrix.postRotate(180);
+					break;
 
-			case ExifInterface.ORIENTATION_ROTATE_270:
-				matrix.postRotate(270);
-				break;
+				case ExifInterface.ORIENTATION_ROTATE_270:
+					matrix.postRotate(270);
+					break;
 			}
-			resizedBitmap = Bitmap.createBitmap(resizedBitmap, 0, 0, resizedBitmap.getWidth(),
-					resizedBitmap.getHeight(), matrix, true);
+			resizedBitmap = Bitmap.createBitmap(resizedBitmap, 0, 0, resizedBitmap.getWidth(), resizedBitmap.getHeight(), matrix, true);
 		} catch (final IOException e) {
 			e.printStackTrace();
 		}

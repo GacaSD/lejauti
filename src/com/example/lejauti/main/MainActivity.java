@@ -4,11 +4,14 @@ import com.example.lejauti.AppActivity;
 import com.example.lejauti.ListaDrzava;
 import com.example.lejauti.R;
 
+import android.R.bool;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -53,32 +56,29 @@ public class MainActivity extends AppActivity {
 			}
 
 			@Override
-			public void destroyItem(final ViewGroup container, final int position, final Object object) {
-			}
+			public void destroyItem(final ViewGroup container, final int position, final Object object) {}
 		});
 		mPager.setOnPageChangeListener(new OnPageChangeListener() {
 
 			@Override
 			public void onPageSelected(int position) {
 				switch (position) {
-				case 0:
-					setBackgroundResourceWithPadding(mTabContainer.getChildAt(0), R.drawable.bg_tab);
-					setBackgroundResourceWithPadding(mTabContainer.getChildAt(1), R.drawable.empty);
-					break;
-				case 1:
-					setBackgroundResourceWithPadding(mTabContainer.getChildAt(0), R.drawable.empty);
-					setBackgroundResourceWithPadding(mTabContainer.getChildAt(1), R.drawable.bg_tab);
-					break;
+					case 0:
+						setBackgroundResourceWithPadding(mTabContainer.getChildAt(0), R.drawable.bg_tab);
+						setBackgroundResourceWithPadding(mTabContainer.getChildAt(1), R.drawable.empty);
+						break;
+					case 1:
+						setBackgroundResourceWithPadding(mTabContainer.getChildAt(0), R.drawable.empty);
+						setBackgroundResourceWithPadding(mTabContainer.getChildAt(1), R.drawable.bg_tab);
+						break;
 				}
 			}
 
 			@Override
-			public void onPageScrolled(int arg0, float arg1, int arg2) {
-			}
+			public void onPageScrolled(int arg0, float arg1, int arg2) {}
 
 			@Override
-			public void onPageScrollStateChanged(int arg0) {
-			}
+			public void onPageScrollStateChanged(int arg0) {}
 		});
 		setBackgroundResourceWithPadding(mTabContainer.getChildAt(0), R.drawable.bg_tab);
 
