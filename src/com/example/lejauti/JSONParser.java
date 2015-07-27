@@ -297,7 +297,7 @@ public class JSONParser {
 			for (final String entry : files.keySet()) {
 				String encoded = getEncodedDrawable(
 						MultiPhotoSelectActivity.decodeScaledFile(files.get(entry).getAbsolutePath(),
-								activity.getScreenWidth(activity) / 8, activity.getScreenHeight(activity) / 8));
+								AppActivity.getScreenWidth(activity) / 8, AppActivity.getScreenHeight(activity) / 8));
 				postData.add(new BasicNameValuePair(entry, encoded));
 			}
 			entity = new UrlEncodedFormEntity(postData, "UTF-8");

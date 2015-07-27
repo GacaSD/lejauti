@@ -15,23 +15,12 @@
         android:textColor="#7f777a"
         android:visibility="gone" />
 
-    <RelativeLayout
-        android:id="@+id/content"
-        android:layout_width="fill_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:visibility="gone" >
+    <ListView
+        android:id="@+id/list"
+        style="@style/list" />
 
-        <ListView
-            android:id="@+id/list"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:divider="@color/transparent"
-            android:dividerHeight="4dp" />
-
-        <ImageView
-            android:id="@+id/btnComments"
-            style="@style/btn_add_comment" />
-    </RelativeLayout>
+    <ImageView
+        android:id="@+id/btnComments"
+        style="@style/btn_add_comment" />
 
 </RelativeLayout>

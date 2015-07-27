@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
 public abstract class LoadingFragment extends Fragment {
@@ -32,7 +33,10 @@ public abstract class LoadingFragment extends Fragment {
 			protected void onPostExecute(JSONObject result) {
 				if (result != null) {
 					findViewById(R.id.preloader).setVisibility(View.GONE);
-					findViewById(R.id.content).setVisibility(View.VISIBLE);
+					findViewById(R.id.list).setVisibility(View.VISIBLE);
+					View btnComment = findViewById(R.id.btnComments);
+					btnComment.setVisibility(View.VISIBLE);
+					btnComment.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.abc_fade_in));
 					onSuccess(result);
 				} else {
 					Toast.makeText(getActivity(), R.string.network_error_occurred, Toast.LENGTH_SHORT).show();

@@ -5,18 +5,12 @@
 
     <include layout="@layout/z__preloader" />
 
-    <RelativeLayout
-        android:id="@+id/content"
+    <ListView
+        android:id="@+id/list"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:visibility="gone" >
-
-        <ListView
-            android:id="@+id/list"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:divider="@color/transparent"
-            android:dividerHeight="2dp" />
-    </RelativeLayout>
+        android:divider="@color/transparent"
+        android:dividerHeight="2dp"
+        android:visibility="gone" />
 
 </RelativeLayout>

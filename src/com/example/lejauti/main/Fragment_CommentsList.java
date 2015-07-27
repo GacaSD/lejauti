@@ -14,17 +14,11 @@ import com.example.lejauti.R;
 
 import Modeli.CurrentParameters;
 import Modeli.Komentar;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.AvoidXfermode.Mode;
 import android.graphics.Bitmap;
-import android.graphics.Bitmap.Config;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.PorterDuffXfermode;
-import android.graphics.Rect;
-import android.graphics.RectF;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -95,7 +89,8 @@ public class Fragment_CommentsList extends LoadingFragment implements OnItemClic
 				// Check empty
 				if (main.length() == 0) {
 					findViewById(R.id.empty).setVisibility(View.VISIBLE);
-					findViewById(R.id.content).setVisibility(View.GONE);
+					findViewById(R.id.list).setVisibility(View.GONE);
+					findViewById(R.id.btnComments).setVisibility(View.VISIBLE);
 					return;
 				}
 
@@ -196,6 +191,7 @@ public class Fragment_CommentsList extends LoadingFragment implements OnItemClic
 			return position;
 		}
 
+		@SuppressLint("InflateParams")
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 

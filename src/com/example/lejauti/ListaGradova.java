@@ -15,18 +15,19 @@ import android.os.Bundle;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
+import android.widget.ListView;
 import android.widget.TextView;
 
-public class ListaGradova extends Activity implements OnItemClickListener {
+public class ListaGradova extends Activity {
 
 	TextView tv;
 	GridView gb;
-	ImageAdapter imageAdapter;
 	ArrayList<Grad> listaGradova;
 	String IsList;
 	String country;
@@ -78,11 +79,8 @@ public class ListaGradova extends Activity implements OnItemClickListener {
 				e.printStackTrace();
 			}
 
-			imageAdapter = new ImageAdapter(this, listaGradova);
-
-			GridView gridView = (GridView) findViewById(R.id.gridview);
-			gridView.setAdapter(imageAdapter);
-			gridView.setOnItemClickListener(this);
+			ListView list = (ListView) findViewById(R.id.gridview);
+			list.setAdapter(new ImageAdapter(this, listaGradova));
 		}
 	}
 
@@ -145,17 +143,23 @@ public class ListaGradova extends Activity implements OnItemClickListener {
 		}
 
 		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
+		public View getView(final int position, View convertView, ViewGroup parent) {
 
 			if (convertView == null) {
-				convertView = mInflater.inflate(R.layout.gradovi_item, null);
+				convertView = mInflater.inflate(R.layout.simple_item, null);
 			}
+			convertView.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					onItemClick(v, position);
+				}
+			});
 
 			// TextView txtKom, txtDatum, txtOcena, txtUser;
 			TextView txtNaziv = (TextView) convertView.findViewById(R.id.txtGrad);
 
 			Grad g = listaGradova.get(position);
-
 			txtNaziv.setText(g.getNaziv());
 			convertView.setTag(g);
 
@@ -164,8 +168,7 @@ public class ListaGradova extends Activity implements OnItemClickListener {
 
 	}
 
-	@Override
-	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+	public void onItemClick(View view, int position) {
 		Grad g = (Grad) view.getTag();
 		if (!mChangeCity) {
 			Intent intent = new Intent(this, AddComment.class);

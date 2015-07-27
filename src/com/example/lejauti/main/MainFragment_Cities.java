@@ -17,6 +17,7 @@ import com.example.lejauti.R;
 import Modeli.CurrentParameters;
 import Modeli.Grad;
 import Modeli.Helper;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.text.format.Time;
@@ -59,8 +60,7 @@ public class MainFragment_Cities extends LoadingFragment {
 		Intent intent = getActivity().getIntent();
 		country = intent.getStringExtra("country");
 		final String strRegUrl = country.replaceAll(" ", "%20");
-		return JSONParser.getJSON(
-				"http://medinapartments.com/apartmani/getTownByCountryName.php?nazivDrzava=%27" + strRegUrl + "%27");
+		return JSONParser.getJSON("http://medinapartments.com/apartmani/getTownByCountryName.php?nazivDrzava=%27" + strRegUrl + "%27");
 	}
 
 	@Override
@@ -97,7 +97,8 @@ public class MainFragment_Cities extends LoadingFragment {
 			// Show empty
 			if (cities.length() == 0) {
 				findViewById(R.id.empty).setVisibility(View.VISIBLE);
-				findViewById(R.id.content).setVisibility(View.GONE);
+				findViewById(R.id.list).setVisibility(View.GONE);
+				findViewById(R.id.btnComments).setVisibility(View.VISIBLE);
 				capital = null;
 				return;
 			} else {
@@ -200,8 +201,7 @@ public class MainFragment_Cities extends LoadingFragment {
 			JSONObject details = json.getJSONArray("weather").getJSONObject(0);
 			JSONObject main = json.getJSONObject("main");
 			txtWhether.setText(String.format("%.2f", main.getDouble("temp")) + " ℃");
-			setWeatherIcon(details.getInt("id"), json.getJSONObject("sys").getLong("sunrise") * 1000,
-					json.getJSONObject("sys").getLong("sunset") * 1000);
+			setWeatherIcon(details.getInt("id"), json.getJSONObject("sys").getLong("sunrise") * 1000, json.getJSONObject("sys").getLong("sunset") * 1000);
 		} catch (Exception e) {
 			Log.e("SimpleWeather", "One or more fields not found in the JSON data");
 		}
@@ -219,24 +219,24 @@ public class MainFragment_Cities extends LoadingFragment {
 			}
 		} else {
 			switch (id) {
-			case 2:
-				icon = R.drawable.grmljevina;
-				break;
-			case 3:
-				icon = R.drawable.kisica;
-				break;
-			case 7:
-				icon = R.drawable.magla;
-				break;
-			case 8:
-				icon = R.drawable.oblacno;// R.drawable.oblacno
-				break;
-			case 6:
-				icon = R.drawable.sneg;
-				break;
-			case 5:
-				icon = R.drawable.kisa;
-				break;
+				case 2:
+					icon = R.drawable.grmljevina;
+					break;
+				case 3:
+					icon = R.drawable.kisica;
+					break;
+				case 7:
+					icon = R.drawable.magla;
+					break;
+				case 8:
+					icon = R.drawable.oblacno;// R.drawable.oblacno
+					break;
+				case 6:
+					icon = R.drawable.sneg;
+					break;
+				case 5:
+					icon = R.drawable.kisa;
+					break;
 			}
 		}
 		ImageView ivWhetherIcon = (ImageView) mCapitalHeader.findViewById(R.id.ivWhetherIcon);
@@ -272,6 +272,7 @@ public class MainFragment_Cities extends LoadingFragment {
 			return position;
 		}
 
+		@SuppressLint("InflateParams")
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 

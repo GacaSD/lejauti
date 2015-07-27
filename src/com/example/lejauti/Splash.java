@@ -19,8 +19,10 @@ import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.widget.Toast;
 
 public class Splash extends Activity {
@@ -85,8 +87,7 @@ public class Splash extends Activity {
 			List<Address> addressList = null;
 			try {
 				addressList = geocoder.getFromLocation(loc.getLatitude(), loc.getLongitude(), 2);
-			} catch (IOException e) {
-			}
+			} catch (IOException e) {}
 			if (addressList != null) {
 				Address address = addressList.get(0);
 				if (address != null) {

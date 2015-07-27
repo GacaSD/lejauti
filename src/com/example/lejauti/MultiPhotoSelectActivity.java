@@ -65,7 +65,7 @@ public class MultiPhotoSelectActivity extends AppActivity {
 			protected void onPostExecute(ArrayList<String> result) {
 
 				// Show content
-				findViewById(R.id.content).setVisibility(View.VISIBLE);
+				findViewById(R.id.list).setVisibility(View.VISIBLE);
 				findViewById(R.id.preloader).setVisibility(View.GONE);
 
 				// Load list

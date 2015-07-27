@@ -17,19 +17,20 @@ import android.os.Bundle;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
+import android.widget.ListView;
 import android.widget.TextView;
 
-public class ListaDrzava extends Activity implements OnItemClickListener {
+public class ListaDrzava extends Activity {
 
 	public static final int NEW_CITY = 10;
 	TextView tv;
 	GridView gb;
-	ImageAdapter imageAdapter;
 	ArrayList<Drzava> listaDrzava;
 	String IsList;
 	TextView txtCurrent;
@@ -46,7 +47,7 @@ public class ListaDrzava extends Activity implements OnItemClickListener {
 		mChangeCity = intent.getBooleanExtra("changeCity", false);
 		txtCurrent = (TextView) findViewById(R.id.current);
 		if (CurrentParameters.getCurrentCountry() != null) {
-			txtCurrent.setText("My current countru :" + CurrentParameters.getCurrentCountry());
+			txtCurrent.setText("My current country: " + CurrentParameters.getCurrentCountry());
 		} else {
 			txtCurrent.setText("Cant find current country. Find country...");
 		}
@@ -68,13 +69,10 @@ public class ListaDrzava extends Activity implements OnItemClickListener {
 				e.printStackTrace();
 			}
 
-			imageAdapter = new ImageAdapter(this, listaDrzava);
-
-			GridView gridView = (GridView) findViewById(R.id.gridview);
-			gridView.setAdapter(imageAdapter);
-			gridView.setOnItemClickListener(this);
+			ListView list = (ListView) findViewById(R.id.list);
+			list.setVisibility(View.VISIBLE);
+			list.setAdapter(new ImageAdapter(this, listaDrzava));
 		}
-
 	}
 
 	public void getCurrent(View view) {
@@ -83,7 +81,6 @@ public class ListaDrzava extends Activity implements OnItemClickListener {
 				Intent intent = new Intent(this, MainActivity.class);
 				intent.putExtra("country", CurrentParameters.getCurrentCountry());
 				startActivity(intent);
-
 			} else {
 				Intent intent = new Intent(this, ListaGradova.class);
 				intent.putExtra("country", CurrentParameters.getCurrentCountry());
@@ -91,9 +88,7 @@ public class ListaDrzava extends Activity implements OnItemClickListener {
 
 				startActivity(intent);
 			}
-
 		}
-
 	}
 
 	private class ImageAdapter extends BaseAdapter {
@@ -128,26 +123,30 @@ public class ListaDrzava extends Activity implements OnItemClickListener {
 		}
 
 		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
+		public View getView(final int position, View convertView, ViewGroup parent) {
 
 			if (convertView == null) {
-				convertView = mInflater.inflate(R.layout.drzave_item, null);
+				convertView = mInflater.inflate(R.layout.simple_item, null);
 			}
+			convertView.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					onItemClick(v, position);
+				}
+			});
 
 			// TextView txtKom, txtDatum, txtOcena, txtUser;
 			TextView txtNaziv = (TextView) convertView.findViewById(R.id.txtDrzava);
 
 			Drzava d = listaDrzava.get(position);
-
 			txtNaziv.setText(d.getName());
 			convertView.setTag(d);
-
 			return convertView;
 		}
 	}
 
-	@Override
-	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+	public void onItemClick(View view, int position) {
 		Drzava d = (Drzava) view.getTag();
 
 		Intent intent;
@@ -160,8 +159,9 @@ public class ListaDrzava extends Activity implements OnItemClickListener {
 			intent.putExtra("country", d.getName());
 			intent.putExtra("IsList", IsList);
 			intent.putExtra("changeCity", mChangeCity);
+			startActivity(intent);
 		}
-		startActivityForResult(intent, NEW_CITY);
+		finish();
 	}
 
 	@Override
