@@ -162,6 +162,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:gravity="right"
+                    android:padding="3dp"
                     android:text="6/15/2009 1:45:30 PM"
                     android:textColor="#949494"
                     android:textSize="12dp" />
@@ -200,9 +201,9 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="4dp"
                 android:inputType="textMultiLine"
-                android:padding="10dp"
+                android:padding="5dp"
                 android:text="Sve je super, a najvise mi se svidelo to sto je sve cisto. Mada moram da kazem da nocni zivot nije nije onakav.....At vero eos et accusamus et iustolat"
-                android:textColor="#000000"
+                android:textColor="@color/black"
                 android:textSize="12dp" />
         </LinearLayout>
     </ScrollView>
