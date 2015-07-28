@@ -6,10 +6,13 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnCameraChangeListener;
 import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -71,10 +74,24 @@ public class MapActivity extends FragmentActivity {
 
 			// Load places
 			if (mPoints != null && mPoints.size() > 0) {
+				final LatLngBounds.Builder builder = new LatLngBounds.Builder();
 				for (String place : mPoints) {
 					String[] split = place.split(":");
-					drawMarker(new LatLng(Double.parseDouble(split[0]), Double.parseDouble(split[1])));
+					LatLng location = new LatLng(Double.parseDouble(split[0]), Double.parseDouble(split[1]));
+					drawMarker(location);
+					builder.include(location);
 				}
+				googleMap.setOnCameraChangeListener(new OnCameraChangeListener() {
+
+				    @Override
+				    public void onCameraChange(CameraPosition arg0) {
+				    	
+				        // Move camera.
+				    	googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 200));
+				        // Remove listener to prevent position reset on camera move.
+				    	googleMap.setOnCameraChangeListener(null);
+				    }
+				});
 			}
 		}
 
@@ -89,7 +106,7 @@ public class MapActivity extends FragmentActivity {
 			}
 		});
 
-		// Don't change markers if details 
+		// Don't change markers if details
 		if (!getIntent().getExtras().containsKey("from_details")) {
 			googleMap.setOnMarkerClickListener(new OnMarkerClickListener() {
 
